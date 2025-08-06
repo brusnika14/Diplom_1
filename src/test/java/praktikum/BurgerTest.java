@@ -27,43 +27,56 @@ public class BurgerTest {
     public void setBunsTest() {
         burger.setBuns(bun);
         when(bun.getName()).thenReturn("Название булочки");
-        assertEquals("Установлена не верная булочка", "Название булочки", burger.bun.getName());
+        assertEquals("Название булочки", burger.bun.getName());
     }
 
     @Test
-    public void addIngredientTest() {
+    public void addIngredientShouldIncreaseSize() {
         burger.addIngredient(ingredientA);
-        assertEquals("В бургер было добавлено " + burger.ingredients.size() +
-                        " ингредиентов, ожидалось добавление 1 ингредиента",
-                1, burger.ingredients.size());
-        assertTrue("Ингредиент не добавился в бургер", burger.ingredients.contains(ingredientA));
+        assertEquals(1, burger.ingredients.size());
     }
 
     @Test
-    public void removeIngredientTest() {
+    public void addIngredientShouldContainAddedIngredient() {
+        burger.addIngredient(ingredientA);
+        assertTrue(burger.ingredients.contains(ingredientA));
+    }
+
+    @Test
+    public void removeIngredientShouldDecreaseSize() {
         burger.ingredients.add(ingredientA);
         burger.ingredients.add(ingredientB);
         burger.ingredients.add(ingredientC);
         burger.removeIngredient(1);
-        assertEquals("Из бургера ингредиент не был удален", 2, burger.ingredients.size());
-        assertTrue("Из бургера был удален не тот ингредиент",
-                burger.ingredients.contains(ingredientA) &&
-                        burger.ingredients.contains(ingredientC) &&
-                        !burger.ingredients.contains(ingredientB));
+        assertEquals(2, burger.ingredients.size());
     }
 
     @Test
-    public void moveIngredientTest() {
+    public void removeIngredientShouldRemoveCorrectIngredient() {
+        burger.ingredients.add(ingredientA);
+        burger.ingredients.add(ingredientB);
+        burger.ingredients.add(ingredientC);
+        burger.removeIngredient(1);
+        assertFalse(burger.ingredients.contains(ingredientB));
+    }
+
+    @Test
+    public void moveIngredientShouldChangePosition() {
+        burger.ingredients.add(ingredientA);
+        burger.ingredients.add(ingredientB);
+        burger.ingredients.add(ingredientC);
+
+        burger.moveIngredient(1, 0);
+
+        assertEquals(ingredientB, burger.ingredients.get(0));
+        assertEquals(ingredientA, burger.ingredients.get(1));
+    }
+    @Test
+    public void moveIngredientShouldNotChangeSize() {
         burger.ingredients.add(ingredientA);
         burger.ingredients.add(ingredientB);
         burger.ingredients.add(ingredientC);
         burger.moveIngredient(1, 0);
-        assertEquals("В бергере ошибочное число ингредиентов", 3, burger.ingredients.size());
-        assertTrue("В бергере находится не тот ингредиент",
-                burger.ingredients.contains(ingredientA) &&
-                        burger.ingredients.contains(ingredientB) &&
-                        burger.ingredients.contains(ingredientC));
-        assertEquals("Ингредиент не был перемещен на новое место", burger.ingredients.get(0), ingredientB);
-        assertEquals("Ингредиент не был перемещен с предыдущего места", burger.ingredients.get(1), ingredientA);
+        assertEquals(3, burger.ingredients.size());
     }
 }
